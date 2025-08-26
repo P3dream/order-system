@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ClientProxy } from '@nestjs/microservices';
-import { Order } from './order.entity';
+import { Order, OrderStatus } from './order.entity';
 import { CreateOrderDto } from './dto/create-order.dto';
 
 @Injectable()
@@ -16,7 +16,7 @@ export class OrdersService {
     const order = this.repo.create({
       customerEmail: dto.customerEmail,
       amount: dto.amount,
-      status: 'pending',
+      status: OrderStatus.PENDING,
     });
 
     const saved = await this.repo.save(order);

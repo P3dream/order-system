@@ -3,7 +3,11 @@ import {
   CreateDateColumn, UpdateDateColumn
 } from 'typeorm';
 
-export type OrderStatus = 'pending' | 'paid' | 'failed';
+export enum OrderStatus {
+  PENDING = 'pending',
+  PAID = 'paid',
+  FAILED = 'failed',
+}
 
 @Entity('orders')
 export class Order {
@@ -16,7 +20,7 @@ export class Order {
   @Column('float')
   amount: number;
 
-  @Column({ default: 'pending' })
+  @Column({ type: 'enum', enum: OrderStatus, default: OrderStatus.PENDING })
   status: OrderStatus;
 
   @CreateDateColumn()

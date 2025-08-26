@@ -19,7 +19,7 @@ services:
       RABBITMQ_DEFAULT_PASS: rabbit
     ports:
       - "5672:5672"   # AMQP
-      - "15672:15672" # UI de gerenciamento
+      - "15672:15672" # UI RabbitMQ
 
   order-service:
     build: ./order-service

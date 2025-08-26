@@ -2,11 +2,21 @@ import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { OrdersModule } from './orders/orders.module';
-import { Order } from './orders/order.entity';
+import * as Joi from 'joi';
+
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true }),
+    ConfigModule.forRoot({
+      isGlobal: true,
+      validationSchema: Joi.object({
+        DATABASE_HOST: Joi.string().required(),
+        DATABASE_PORT: Joi.number().default(5432),
+        DATABASE_USER: Joi.string().required(),
+        DATABASE_PASS: Joi.string().required(),
+        DATABASE_NAME: Joi.string().required(),
+      }),
+    }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
@@ -17,8 +27,8 @@ import { Order } from './orders/order.entity';
         username: cfg.get('DATABASE_USER'),
         password: cfg.get('DATABASE_PASS'),
         database: cfg.get('DATABASE_NAME'),
-        entities: [Order],
-        synchronize: true, // didático; em prod use migrations
+        entities: [__dirname + '/**/*.entity{.ts,.js}'],
+        synchronize: true
       }),
     }),
     OrdersModule,
