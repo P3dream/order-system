@@ -3,14 +3,13 @@ import { Ctx, EventPattern, Payload, RmqContext } from '@nestjs/microservices';
 import { PaymentService } from './payments.service';
 import { ApiTags, ApiOperation, ApiParam, ApiResponse } from '@nestjs/swagger';
 
-@ApiTags('Payments') // Groups endpoints under "Payments" in Swagger
+@ApiTags('Payments')
 @Controller('payments')
 export class PaymentController {
   private readonly logger = new Logger(PaymentController.name);
 
   constructor(private readonly service: PaymentService) {}
 
-  // RabbitMQ Listener (does not appear in Swagger)
   @EventPattern('order.created')
   async handleOrderCreated(@Payload() data: any, @Ctx() context: RmqContext) {
     const channel = context.getChannelRef();
